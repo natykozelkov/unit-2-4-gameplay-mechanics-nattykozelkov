@@ -1,18 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Rotator : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private float rotationSpeed;
+    private PlayerInputActions inputAction;
+    private float moveDirection;
+
+    void Awake()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    void OnEnable()
+    {
+        
+    }
+
+    void OnDisable()
+    {
+        
+    }
+
+    void OnMovementPerformed(InputAction.CallbackContext value)
+    {
+
+    }
+
+    void OnMovementCanceled(InputAction.CallbackContext value)
+    {
+
     }
 }

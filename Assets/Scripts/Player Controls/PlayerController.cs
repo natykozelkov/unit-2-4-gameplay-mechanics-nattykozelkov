@@ -84,14 +84,15 @@ public class PlayerController : MonoBehaviour
     {
         if (focalpoint != null)
         {
+
+            Debug.Log(focalpoint.forward.normalized * moveForceMagnitude * moveDirection);
             playerRB.AddForce(focalpoint.forward.normalized * moveForceMagnitude * moveDirection);
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject.tag);
-        if(collision.gameObject.tag == "Startup")
+        if(collision.gameObject.CompareTag("Startup"))
         {
             collision.gameObject.tag = "Ground";
             playerCollider.material.bounciness = GameManager.Instance.playerBounce;

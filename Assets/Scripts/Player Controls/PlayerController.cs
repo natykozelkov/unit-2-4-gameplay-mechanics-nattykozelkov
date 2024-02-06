@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
 
         playerCollider.material.bounciness = 0.4f;
         powerUpIndicator.intensity = 0f;
+        hasPowerUp = true;
     }
 
     void OnEnable()

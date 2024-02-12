@@ -20,17 +20,17 @@ public class SpawnManager : MonoBehaviour
 
     [Header("Portal Fields")]
     [SerializeField] private int portalFirstAppearance;
-    private float portalByWaveProbability, portalByWaveDuration;
+    [SerializeField] private float portalByWaveProbability, portalByWaveDuration;
 
     [Header("PowerUp Fields")]
     [SerializeField] private int powerUpFirstAppearance;
-    private float powerUpByWaveProbability, powerUpByWaveDuration;
+    [SerializeField] private float powerUpByWaveProbability, powerUpByWaveDuration;
 
     [Header("Island")]
     [SerializeField] private GameObject island;
 
     private Vector3 islandSize;
-    private int WaveNumber;
+    private int waveNumber;
     private bool portalActive;
     private bool powerUpActive;
 
@@ -38,33 +38,45 @@ public class SpawnManager : MonoBehaviour
     void Start()
     {
         islandSize = island.GetComponent<MeshCollider>().bounds.size;
-        WaveNumber = 1;
+        waveNumber = 1;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (GameObject.Find("Player") != null && FindObjectsOfType<IceSphereController>().Length == 0)
+        
+
+        if (GameObject.Find("Player") != null && FindObjectsOfType<IceSphereController>().Length <= 0)
         {
             SpawnIceWave();
+        }
+
+        if (waveNumber > portalFirstAppearance || (GameManager.Instance.debugSpawnPortal = true && !gameObject.CompareTag("Portal")))
+        {
+            SetObjectActive(portalByWaveProbability, portal);
         }
     }
 
     void SpawnIceWave()
     {
-        for(int i = 0; i < WaveNumber; i++)
+        for(int i = 0; i < waveNumber; i++)
         {
             Instantiate(iceSphere, SetRandomPosition(1.6f), iceSphere.transform.rotation);
         }
-        if(WaveNumber < maximumWave)
+        if(waveNumber < maximumWave)
         {
-            WaveNumber++;
+            waveNumber++;
         }
     }
 
     void SetObjectActive(float byWaveProbability, GameObject obj)
     {
+        if (Random.value < waveNumber * byWaveProbability * Time.deltaTime)
+        {
+            obj.transform.position = SetRandomPosition(-0.65f);
+            StartCoroutine(CountdownTimer(obj.tag));
 
+        }
     }
 
     Vector3 SetRandomPosition(float posY)
@@ -75,8 +87,29 @@ public class SpawnManager : MonoBehaviour
         return new Vector3(randomX, posY, randomZ);
     }
 
+    // It begins running without taking over control of the script's execution meaning
+    // It eneables the portal, waits and the disables it again
     IEnumerator CountdownTimer(string objectTag)
     {
-        yield return null;
+        float byWaveDuration = 0;
+
+        switch (objectTag)
+        {
+            case "Portal":
+                portal.SetActive(true);
+                portalActive = true;
+                byWaveDuration = portalByWaveDuration;
+                break;
+        }
+
+        yield return new WaitForSeconds(waveNumber * byWaveDuration);
+
+        switch (objectTag)
+        {
+            case "Portal":
+                portal.SetActive(false);
+                portalActive = false;
+                break;
+        }
     }
 }

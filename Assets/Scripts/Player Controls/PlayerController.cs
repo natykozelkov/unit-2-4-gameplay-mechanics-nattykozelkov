@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     private float moveForceMagnitude;
     private float moveDirection;
     public bool hasPowerUp { get; private set; }
+    private GameManager gameManager;
    
 
     private PlayerInputActions inputAction;
@@ -36,10 +37,12 @@ public class PlayerController : MonoBehaviour
         playerRB = GetComponent<Rigidbody>();
         playerCollider = GetComponent<SphereCollider>();
         powerUpIndicator = GetComponent<Light>();
+        gameManager = GetComponent<GameManager>();
 
         playerCollider.material.bounciness = 0.4f;
         powerUpIndicator.intensity = 0f;
         hasPowerUp = true;
+
     }
 
     void OnEnable()
@@ -79,6 +82,7 @@ public class PlayerController : MonoBehaviour
         playerRB.drag = GameManager.Instance.playerDrag;
         moveForceMagnitude = GameManager.Instance.playerMoveForce;
         focalpoint = GameObject.Find("Focal Point").transform;
+        gameObject.layer = LayerMask.NameToLayer("Player");
     }
   
     private void Move()
@@ -103,7 +107,23 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if(other.CompareTag("Portal"))
+        {
+            gameObject.layer = LayerMask.NameToLayer("Portal");
+        }
+    }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.CompareTag("Portal"))
+        {
+            gameObject.layer = LayerMask.NameToLayer("Player");
+            if(transform.position.y <= other.transform.position.y - 1f)
+            {
+                transform.position = Vector3.up * 25;
+                GameManager.Instance.switchLevels = true;
+            }
+        }
     }
 
     private IEnumerator PowerUpCooldown(float cooldown)

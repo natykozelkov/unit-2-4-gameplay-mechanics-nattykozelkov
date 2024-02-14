@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 /********************************************
  * GameManager is the component of the GameMananger
@@ -31,9 +32,9 @@ public class GameManager : MonoBehaviour
     public bool debugSpawnPowerUp;
     public bool debugPowerUpRepel;
 
-    public bool switchLevels { get; private set; }
-    public bool gameOver { get; private set; }
-    public bool playerHasPowerUp { get; private set; }
+    public bool switchLevels { get; set; }
+    public bool gameOver { get; set; }
+    public bool playerHasPowerUp { get; set; }
 
     // This assign the GameManager script to an instace of GameManager called Instance.
     // It allows another class to get the field values of the GameManager.
@@ -66,7 +67,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(switchLevels)
+        {
+            SwitchLevels();
+        }
     }
 
     void EnablePlayer()
@@ -76,6 +80,20 @@ public class GameManager : MonoBehaviour
 
     void SwitchLevels()
     {
+        switchLevels = false;
 
+        string currentScene = SceneManager.GetActiveScene().name;
+
+        int nextLevel = int.Parse(currentScene.Substring(5)) + 1;
+
+        if(nextLevel <= SceneManager.sceneCountInBuildSettings)
+        {
+            SceneManager.LoadScene("Level " + nextLevel.ToString());
+        }
+        else
+        {
+            gameOver = true;
+            Debug.Log("You Won");
+        }
     }
 }

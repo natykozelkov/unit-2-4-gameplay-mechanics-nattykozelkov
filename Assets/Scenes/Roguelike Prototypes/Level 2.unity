@@ -1191,7 +1191,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1909411411
 Transform:
   m_ObjectHideFlags: 0
@@ -1400,7 +1400,7 @@ MonoBehaviour:
   playerScale: {x: 1.25, y: 1.25, z: 1.25}
   playerMass: 10
   playerDrag: 0.2
-  playerMoveForce: 15
+  playerMoveForce: 50
   playerRepelForce: 0.75
   playerBounce: 0.75
   waypoints: []

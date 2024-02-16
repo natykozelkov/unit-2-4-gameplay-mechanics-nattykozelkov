@@ -60,9 +60,14 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Move();
+        if(transform.position.y < -10)
+        {
+            GameManager.Instance.gameOver = true;
+            Debug.Log("You Lost");
+        }
     }
 
     private void OnMovementPerformed(InputAction.CallbackContext value)
